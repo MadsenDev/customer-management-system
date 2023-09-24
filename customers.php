@@ -9,6 +9,21 @@ if (!isset($_SESSION['loggedin'])) {
 <html lang="en">
 <head>
     <?php include 'components/head.php'; ?>
+    <style>
+        .customer-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Desktop-specific styling */
+        @media (min-width: 1025px) {
+            .customer-card {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="flex">
@@ -23,35 +38,28 @@ if (!isset($_SESSION['loggedin'])) {
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                echo '<table class="min-w-full bg-white">';
-                echo '<thead class="bg-gray-800 text-white">';
-                echo '<tr>';
-                echo '<th class="w-1/12 py-2 px-4 border-r">ID</th>';
-                echo '<th class="w-1/5 py-2 px-4 border-r">First Name</th>';
-                echo '<th class="w-1/5 py-2 px-4 border-r">Last Name</th>';
-                echo '<th class="w-1/5 py-2 px-4 border-r">Address</th>';
-                echo '<th class="w-1/5 py-2 px-4 border-r">Phone Number</th>';
-                echo '<th class="w-1/5 py-2 px-4 border-r">Email</th>';
-                echo '<th class="w-1/6 py-2 px-4">Actions</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody class="text-gray-700">';
+                // Desktop version
+                echo '<div class="hidden md:block">';
+                include 'customer_table.php';  // Your existing table layout
+                echo '</div>';
+
+                // Rewind result set
+                $result->data_seek(0);
+
+                // Mobile version
+                echo '<div class="md:hidden">';
                 while ($row = $result->fetch_assoc()) {
-                    echo '<tr>';
-                    echo '<td class="w-1/12 py-2 px-4">' . $row['CustomerID'] . '</td>';
-                    echo '<td class="w-1/5 py-2 px-4"><a href="view_customer.php?id=' . $row['CustomerID'] . '" class="text-blue-500 hover:text-blue-700">' . $row['FirstName'] . '</a></td>';
-                    echo '<td class="w-1/5 py-2 px-4">' . $row['LastName'] . '</td>';
-                    echo '<td class="w-1/5 py-2 px-4">' . $row['Address'] . '</td>';
-                    echo '<td class="w-1/5 py-2 px-4">' . $row['PhoneNumber'] . '</td>';
-                    echo '<td class="w-1/5 py-2 px-4">' . $row['Email'] . '</td>';
-                    echo '<td class="w-1/6 py-2 px-4 text-center">';
-                    echo '<a href="edit_customer.php?id=' . $row['CustomerID'] . '" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit fa-lg"></i></a> ';
-                    echo '<a href="delete_customer.php?id=' . $row['CustomerID'] . '" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt fa-lg"></i></a>';
-                    echo '</td>';
-                    echo '</tr>';
+                    echo '<div class="customer-card">';
+                    echo 'ID: ' . $row['CustomerID'] . '<br>';
+                    echo 'Name: <a href="view_customer.php?id=' . $row['CustomerID'] . '" class="text-blue-500 hover:text-blue-700">' . $row['FirstName'] . ' ' . $row['LastName'] . '</a><br>';
+                    echo 'Address: ' . $row['Address'] . '<br>';
+                    echo 'Phone: ' . $row['PhoneNumber'] . '<br>';
+                    echo 'Email: ' . $row['Email'] . '<br>';
+                    echo '<a href="edit_customer.php?id=' . $row['CustomerID'] . '" class="text-blue-500 hover:text-blue-700">Edit</a> ';
+                    echo '<a href="delete_customer.php?id=' . $row['CustomerID'] . '" class="text-red-500 hover:text-red-700">Delete</a>';
+                    echo '</div>';
                 }
-                echo '</tbody>';
-                echo '</table>';
+                echo '</div>';
             } else {
                 echo "No customers found";
             }

@@ -1,137 +1,8 @@
-<?php
-session_start();
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
-    exit;
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include 'components/head.php'; ?>
-    <style>
-        /* Custom styles */
-        .container {
-            display: flex;
-            justify-content: space-between;
-        }
-        .section-wrapper {
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .section-header {
-            background-color: #f1f1f1;
-            padding: 10px;
-            font-size: 18px;
-            border-bottom: 1px solid #ccc;
-        }
-        .section-content {
-            padding: 15px;
-        }
-
-        .grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .card {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
-        text-align: center;
-    }
-
-    .card i {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .card h3 {
-        font-size: 18px;
-    }
-
-    .card p {
-        font-size: 16px;
-    }
-
-    .work-description-list {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.work-description-item {
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.work-description-item p {
-    margin: 0;
-    padding: 0;
-}
-
-.work-description-item span {
-    font-size: 0.8em;
-    color: #888;
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1;
-}
-
-.overlay-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    z-index: 2;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-}
-/* Mobile-specific styling */
-@media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-            }
-            .section-wrapper {
-                margin-bottom: 10px;
-            }
-            .card {
-                font-size: 14px;
-            }
-            .section-header {
-                font-size: 16px;
-            }
-            .section-content {
-                padding: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
     <div class="flex">
-        <?php include 'components/menu.php'; ?>
         <div class="w-5/6 p-5">
             <h1 class="text-2xl mb-4">View Ticket</h1>
 
             <?php
-            include 'db.php';
 
             // Add Work Description
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -263,7 +134,7 @@ if (!isset($_SESSION['loggedin'])) {
 
 
     <div class="container">
-    <<!-- Work Descriptions -->
+    <!-- Work Descriptions -->
 <div class="section-wrapper">
     <div class="section-header">Work Descriptions</div>
     <div class="section-content">
@@ -339,7 +210,7 @@ if (!isset($_SESSION['loggedin'])) {
     <div class="overlay-content">
         <span class="close-btn" onclick="closeAddPaymentOverlay()">&times;</span>
         <h2>Add Payment</h2>
-        <form method="POST" action="add_payment.php">
+        <form method="POST" action="?page=add_payment">
             <input type="hidden" name="TicketID" value="<?php echo $id; ?>">
             <input type="hidden" name="CustomerID" value="<?php echo $row['CustomerID']; ?>">  <!-- Add this line -->
             Amount: <input type="number" name="Amount" step="0.01"><br>
@@ -354,7 +225,7 @@ if (!isset($_SESSION['loggedin'])) {
     <div class="overlay-content">
         <span class="close-btn" onclick="closeEditPaymentOverlay()">&times;</span>
         <h2>Edit Payment</h2>
-        <form method="POST" action="edit_payment.php">
+        <form method="POST" action="?page=edit_payment">
             <input type="hidden" name="PaymentID" value="<?php echo $payment_row['PaymentID']; ?>">
             Amount: <input type="number" name="Amount" step="0.01" value="<?php echo $payment_row['Amount']; ?>"><br>
             Payment Date: <input type="date" name="PaymentDate" value="<?php echo $payment_row['PaymentDate']; ?>"><br>
@@ -362,9 +233,124 @@ if (!isset($_SESSION['loggedin'])) {
         </form>
     </div>
 </div>
+</div>
+</div>
     </div>
+    <style>
+    /* Custom styles */
+    .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .section-wrapper {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .section-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 18px;
+            border-bottom: 1px solid #ccc;
+        }
+        .section-content {
+            padding: 15px;
+        }
 
-    <script src="./js/main.js"></script>
+        .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card i {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .card h3 {
+        font-size: 18px;
+    }
+
+    .card p {
+        font-size: 16px;
+    }
+
+    .work-description-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.work-description-item {
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.work-description-item p {
+    margin: 0;
+    padding: 0;
+}
+
+.work-description-item span {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    z-index: 2;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+/* Mobile-specific styling */
+@media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            .section-wrapper {
+                margin-bottom: 10px;
+            }
+            .card {
+                font-size: 14px;
+            }
+            .section-header {
+                font-size: 16px;
+            }
+            .section-content {
+                padding: 10px;
+            }
+        }
+</style>
+
     <script>
         function openAddPaymentOverlay() {
     document.getElementById('addPaymentOverlay').style.display = 'block';
@@ -386,5 +372,3 @@ function submitForm() {
     document.getElementById("statusForm").submit();
 }
     </script>
-</body>
-</html>

@@ -1,11 +1,4 @@
 <?php
-session_start();
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
-    exit;
-}
-
-include 'db.php';
 
 // Fetch statistics from database (replace with your own queries)
 $total_tickets = $conn->query("SELECT COUNT(*) FROM Tickets")->fetch_row()[0];
@@ -16,10 +9,6 @@ $total_payments = $conn->query("SELECT SUM(Amount) FROM Payments")->fetch_row()[
 $total_customers = $conn->query("SELECT COUNT(*) FROM Customers")->fetch_row()[0];
 $total_users = $conn->query("SELECT COUNT(*) FROM Users")->fetch_row()[0];
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-    <?php include 'components/head.php'; ?>
     <style>
         /* Common styles */
         .card {
@@ -64,8 +53,6 @@ $total_users = $conn->query("SELECT COUNT(*) FROM Users")->fetch_row()[0];
             /* Add any additional mobile-specific styles here */
         }
     </style>
-</head>
-<body>
     <div class="flex">
         <?php include 'components/menu.php'; ?>
         <div class="content w-full p-5">
@@ -104,6 +91,3 @@ $total_users = $conn->query("SELECT COUNT(*) FROM Users")->fetch_row()[0];
             </div>
         </div>
     </div>
-    <script src="./js/main.js"></script>
-</body>
-</html>

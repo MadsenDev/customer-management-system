@@ -9,6 +9,21 @@ if (!isset($_SESSION['loggedin'])) {
 <html lang="en">
 <head>
     <?php include 'components/head.php'; ?>
+    <style>
+        .ticket-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Desktop-specific styling */
+        @media (min-width: 1025px) {
+            .ticket-card {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="flex">
@@ -38,40 +53,28 @@ if (!isset($_SESSION['loggedin'])) {
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                echo '<table class="min-w-full bg-white">';
-                echo '<thead>';
-                echo '<tr>';
-                echo '<th class="py-2 px-4 border"><a href="?order=TicketID">Ticket ID</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=CustomerID">Customer</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=StatusID">Status</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=CreatedBy">Created By</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=Description">Description</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=CreatedAt">Created At</a></th>';
-                echo '<th class="py-2 px-4 border"><a href="?order=UpdatedAt">Updated At</a></th>';
-                echo '<th class="py-2 px-4 border">Actions</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
+                echo '<div class="hidden md:block">';
+                // Existing table layout
+                include 'general_ticket_table.php';
+                echo '</div>';
 
+                // Rewind result set
+                $result->data_seek(0);
+
+                // Mobile version
+                echo '<div class="md:hidden">';
                 while ($row = $result->fetch_assoc()) {
-                    echo '<tr>';
-                    echo '<td class="py-2 px-4 border">' . $row["TicketID"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["CFirstName"] . ' ' . $row["CLastName"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["StatusName"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["UFirstName"] . ' ' . $row["ULastName"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["Description"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["CreatedAt"] . '</td>';
-                    echo '<td class="py-2 px-4 border">' . $row["UpdatedAt"] . '</td>';
-                    echo '<td class="py-2 px-4 border">';
-                    echo '<a href="view_ticket.php?id=' . $row['TicketID'] . '">View</a> | ';
-                    echo '<a href="edit_ticket.php?id=' . $row['TicketID'] . '">Edit</a> | ';
-                    echo '<a href="delete_ticket.php?id=' . $row['TicketID'] . '">Delete</a>';
-                    echo '</td>';
-                    echo '</tr>';
+                    echo '<div class="ticket-card">';
+                    echo 'Ticket ID: ' . $row['TicketID'] . '<br>';
+                    echo 'Customer: ' . $row['CFirstName'] . ' ' . $row['CLastName'] . '<br>';
+                    echo 'Status: ' . $row['StatusName'] . '<br>';
+                    echo 'Created By: ' . $row['UFirstName'] . ' ' . $row['ULastName'] . '<br>';
+                    echo '<a href="view_ticket.php?id=' . $row['TicketID'] . '" class="text-blue-500 hover:text-blue-700">View</a> ';
+                    echo '<a href="edit_ticket.php?id=' . $row['TicketID'] . '" class="text-blue-500 hover:text-blue-700">Edit</a> ';
+                    echo '<a href="delete_ticket.php?id=' . $row['TicketID'] . '" class="text-red-500 hover:text-red-700">Delete</a>';
+                    echo '</div>';
                 }
-
-                echo '</tbody>';
-                echo '</table>';
+                echo '</div>';
             } else {
                 echo "No tickets found";
             }

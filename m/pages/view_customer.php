@@ -1,43 +1,4 @@
-<?php
-session_start();
-if (!isset($_SESSION['loggedin'])) {
-    header('Location: login.php');
-    exit;
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include 'components/head.php'; ?>
-    <style>
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 15px;
-            text-align: center;
-        }
-        .card i {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .card h3 {
-            font-size: 18px;
-        }
-        .card p {
-            font-size: 16px;
-        }
-        .ticket-row:hover {
-            background-color: #f1f1f1;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="flex">
+<div class="flex">
         <?php include 'components/menu.php'; ?>
         <div class="w-5/6 p-5">
             <h1 class="text-2xl mb-4">View Customer</h1>
@@ -81,7 +42,7 @@ if (!isset($_SESSION['loggedin'])) {
             </div>
 
             <h2 class="text-xl mt-4 mb-2">Related Tickets</h2>
-            <a href="add_ticket.php?customer=<?php echo $id; ?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Create New Ticket</a>
+            <a href="?page=add_ticket&customer=<?php echo $id; ?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">Create New Ticket</a>
             
             <?php
             $sql_tickets = "SELECT Tickets.*, StatusOptions.StatusName FROM Tickets LEFT JOIN StatusOptions ON Tickets.StatusID = StatusOptions.StatusID WHERE CustomerID = $id";
@@ -97,7 +58,7 @@ if (!isset($_SESSION['loggedin'])) {
                 echo '</thead>';
                 echo '<tbody class="text-gray-700">';
                 while ($row_tickets = $result_tickets->fetch_assoc()) {
-                    echo '<tr class="ticket-row" onclick="location.href=\'view_ticket.php?id=' . $row_tickets['TicketID'] . '\'">';
+                    echo '<tr class="ticket-row" onclick="location.href=\'?page=view_ticket&id=' . $row_tickets['TicketID'] . '\'">';
                     echo '<td class="py-2 px-4">' . $row_tickets['TicketID'] . '</td>';
                     echo '<td class="py-2 px-4">' . $row_tickets['StatusName'] . '</td>';
                     echo '<td class="py-2 px-4">' . $row_tickets['Description'] . '</td>';
@@ -112,6 +73,70 @@ if (!isset($_SESSION['loggedin'])) {
 
         </div>
     </div>
-    <script src="./js/main.js"></script>
-</body>
-</html>
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    /* Single column layout for mobile */
+    @media (max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+    }
+    .card i {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .card h3 {
+        font-size: 18px;
+    }
+    .card p {
+        font-size: 16px;
+    }
+    /* Mobile-friendly table */
+    @media (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        tr {
+            margin: 0 0 1rem 0;
+        }
+        tr:nth-child(odd) {
+            background: #f1f1f1;
+        }
+        td {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+            padding-left: 50%;
+            text-align: left;
+        }
+        td:before {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+        td:nth-of-type(1):before { content: "Ticket ID"; }
+        td:nth-of-type(2):before { content: "Status"; }
+        td:nth-of-type(3):before { content: "Description"; }
+    }
+    .ticket-row:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+</style>
